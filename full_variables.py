@@ -1,8 +1,8 @@
-
+#The followin script download all variables from each country contained in variable 'countries'
+#The period of time is defined using start_year and end_year.
 
 import os
 import math
-#import goslate
 import numpy as np
 import time
 import pandas as pd

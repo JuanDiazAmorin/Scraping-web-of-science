@@ -31,7 +31,7 @@ total_data = pd.DataFrame(columns = ['PT', 'AU', 'BA', 'BE', 'GP', 'AF', 'BF', '
 
 start = time.time()
 
-start_year = 2018
+start_year = 1990
 end_year = 2018
 
 

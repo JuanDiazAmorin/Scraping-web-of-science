@@ -129,10 +129,10 @@ for k in range(0,len(countries)):
         driver.find_element_by_xpath("//*[@class='flat-button quickoutput-cancel-action']").click() 
         driver.implicitly_wait(time_wait)   
         
-        time.sleep(5)
+        time.sleep(7)
         data = pd.read_csv('savedrecs.txt',sep='\t', encoding='utf-16',
                                index_col = False)
-        
+        data['COUNTRY'] = str(countries[k])
         total_data = total_data.append(data)
     
         folder = directory_files
@@ -170,10 +170,10 @@ for k in range(0,len(countries)):
     driver.find_element_by_xpath("//*[@class='flat-button quickoutput-cancel-action']").click() 
     driver.implicitly_wait(time_wait)   
     
-    time.sleep(5)
+    time.sleep(7)
     data = pd.read_csv('savedrecs.txt',sep='\t', encoding='utf-16',
                                index_col = False)  
-    
+    data['COUNTRY'] = str(countries[k])
     total_data = total_data.append(data)
     
     folder = directory_files
@@ -190,10 +190,7 @@ for k in range(0,len(countries)):
 end = time.time()
 print('Elapsed time:',end-start)
 
-total_data.to_csv('total_data.txt', sep='|')     
-    
-    
-    
+total_data.to_csv('total_data.csv', sep='|')     
     
     
     

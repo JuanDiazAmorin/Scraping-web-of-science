@@ -120,17 +120,19 @@ for k in range(0,len(countries)):
         driver.find_element_by_id('markTo').clear()
         driver.find_element_by_id('markTo').send_keys(end_number)
         Select(driver.find_element_by_id('bib_fields')).select_by_index(3)
-        Select(driver.find_element_by_id('saveOptions')).select_by_index(4)           
+        Select(driver.find_element_by_id('saveOptions')).select_by_index(4)
+
+        os.chdir(directory_files)           
             
         driver.find_element_by_class_name('quickoutput-action').click()
         driver.implicitly_wait(time_wait)
         driver.find_element_by_xpath("//*[@class='flat-button quickoutput-cancel-action']").click() 
         driver.implicitly_wait(time_wait)   
-    
-        os.chdir(directory_files)
+        
         time.sleep(5)
         data = pd.read_csv('savedrecs.txt',sep='\t', encoding='utf-16',
-                               index_col = False)  
+                               index_col = False)
+        
         total_data = total_data.append(data)
     
         folder = directory_files
@@ -160,16 +162,18 @@ for k in range(0,len(countries)):
     driver.find_element_by_id('markTo').send_keys(end_number)
     Select(driver.find_element_by_id('bib_fields')).select_by_index(3)
     Select(driver.find_element_by_id('saveOptions')).select_by_index(4)           
-            
+    
+    os.chdir(directory_files) 
+        
     driver.find_element_by_class_name('quickoutput-action').click()
     driver.implicitly_wait(time_wait)
     driver.find_element_by_xpath("//*[@class='flat-button quickoutput-cancel-action']").click() 
     driver.implicitly_wait(time_wait)   
     
-    os.chdir(directory_files)
     time.sleep(5)
     data = pd.read_csv('savedrecs.txt',sep='\t', encoding='utf-16',
                                index_col = False)  
+    
     total_data = total_data.append(data)
     
     folder = directory_files
@@ -187,6 +191,7 @@ end = time.time()
 print('Elapsed time:',end-start)
 
 total_data.to_csv('total_data.txt', sep='|')     
+    
     
     
     

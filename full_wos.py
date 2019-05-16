@@ -9,7 +9,6 @@ from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
 from bs4 import BeautifulSoup
 
-
 time_wait = 100
 directory_files = 'D:/Users/idelavega/Desktop/Topics_paper'
 

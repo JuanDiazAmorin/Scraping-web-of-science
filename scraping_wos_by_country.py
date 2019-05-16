@@ -1,5 +1,6 @@
 
 
+
 import os
 import math
 #import goslate
@@ -106,25 +107,30 @@ for k in range(0,len(countries)):
             
         driver.find_element_by_class_name('goToPageNumber-input').send_keys(Keys.ENTER)
         driver.implicitly_wait(time_wait)            
-            
-            
-        Select(driver.find_element_by_id('saveToMenu')).select_by_index(4)
+    
+        if n==1:
+            export = driver.find_element_by_id("exportTypeName").click()
+            driver.find_elements_by_class_name('subnav-item')[33].click()
+        else:
+            driver.find_element_by_class_name('selectedExportOption').click()
+    
         driver.find_element_by_id('numberOfRecordsRange').click()
+        driver.find_element_by_id('markFrom').clear()
         driver.find_element_by_id('markFrom').send_keys(start_number)
+        driver.find_element_by_id('markTo').clear()
         driver.find_element_by_id('markTo').send_keys(end_number)
         Select(driver.find_element_by_id('bib_fields')).select_by_index(3)
         Select(driver.find_element_by_id('saveOptions')).select_by_index(4)           
             
         driver.find_element_by_class_name('quickoutput-action').click()
         driver.implicitly_wait(time_wait)
-        driver.find_element_by_class_name('quickoutput-cancel-action').click()
+        driver.find_element_by_xpath("//*[@class='flat-button quickoutput-cancel-action']").click() 
         driver.implicitly_wait(time_wait)   
     
         os.chdir(directory_files)
         time.sleep(5)
         data = pd.read_csv('savedrecs.txt',sep='\t', encoding='utf-16',
                                index_col = False)  
-        data['COUNTRY'] = str(countries[k])
         total_data = total_data.append(data)
     
         folder = directory_files
@@ -134,7 +140,7 @@ for k in range(0,len(countries)):
                 if os.path.isfile(file_path):
                     os.unlink(file_path)
             except Exception as e:
-                print(e)    
+                print(e) 
     
     start_number = n*500 + 1
     end_number =  n*500 + remainder
@@ -144,26 +150,26 @@ for k in range(0,len(countries)):
             
     driver.find_element_by_class_name('goToPageNumber-input').send_keys(Keys.ENTER)
     driver.implicitly_wait(time_wait)            
-            
-            
-    Select(driver.find_element_by_id('saveToMenu')).select_by_index(4)
+
+    driver.find_element_by_class_name('selectedExportOption').click()
+
     driver.find_element_by_id('numberOfRecordsRange').click()
+    driver.find_element_by_id('markFrom').clear()
     driver.find_element_by_id('markFrom').send_keys(start_number)
+    driver.find_element_by_id('markTo').clear()
     driver.find_element_by_id('markTo').send_keys(end_number)
     Select(driver.find_element_by_id('bib_fields')).select_by_index(3)
     Select(driver.find_element_by_id('saveOptions')).select_by_index(4)           
             
     driver.find_element_by_class_name('quickoutput-action').click()
     driver.implicitly_wait(time_wait)
-    driver.find_element_by_class_name('quickoutput-cancel-action').click()
-    driver.implicitly_wait(time_wait)           
-
+    driver.find_element_by_xpath("//*[@class='flat-button quickoutput-cancel-action']").click() 
+    driver.implicitly_wait(time_wait)   
+    
     os.chdir(directory_files)
     time.sleep(5)
     data = pd.read_csv('savedrecs.txt',sep='\t', encoding='utf-16',
-                               index_col = False)    
-    
-    data['COUNTRY'] = str(countries[k])
+                               index_col = False)  
     total_data = total_data.append(data)
     
     folder = directory_files
@@ -173,13 +179,14 @@ for k in range(0,len(countries)):
             if os.path.isfile(file_path):
                 os.unlink(file_path)
         except Exception as e:
-            print(e) 
+            print(e)  
     
     driver.close()
-    
-    
-total_data.to_csv('data_topics.txt', sep='|')     
-    
+
+end = time.time()
+print('Elapsed time:',end-start)
+
+total_data.to_csv('total_data.txt', sep='|')     
     
     
     

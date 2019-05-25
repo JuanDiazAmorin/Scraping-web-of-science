@@ -1,4 +1,11 @@
 
+## THIS SCRIPT DOWNLOAD ALL RECORDS FOR WHATEVER COUNTRY.
+
+## ADVICE: IF YOU WANT TO DOWNLOAD RECORDS FROM A COUNTRY WITH LESS OR EQUAL THAN 100,000 RECORDS, PLEASE CHECK OUT THE SCRIPT NAMED 
+## 'scraping_wos_by_country_less100000.py'. It takes less time.
+
+
+
 
 import os
 import math
@@ -14,8 +21,6 @@ from bs4 import BeautifulSoup
 
 time_wait = 100
 directory_files = 'D:/Users/idelavega/Desktop/Topics_paper'
-path_data = 'D:/Users/idelavega/Desktop/Papers/USA_SPAIN_PERU/data'
-
 
 folder = directory_files
 for the_file in os.listdir(folder):
@@ -38,18 +43,70 @@ error_journal = []
     
 start = time.time()
 
-
-
-countries = ('PERU','SPAIN','USA')
+countries = ('SPAIN','USA')
 start_year = 1990
-end_year = 1995
+end_year = 2018
 
 for z in range(0, len(countries)):
-    os.chdir(path_data)
-    journals = pd.read_excel('journals_list.xlsx', sheet_name=countries[z])
-    
+    print(countries[z])
     for year in range(start_year, end_year+1):
-              
+        print(year)
+        chromedriver = 'D:/Users/idelavega/Desktop/chromedriver'
+        options = webdriver.ChromeOptions()
+        prefs = {"download.default_directory": directory_files} 
+        options.add_experimental_option("prefs", prefs)
+    
+        driver = webdriver.Chrome(chromedriver,options=options)
+        driver.get('https://www.webofknowledge.com')
+        driver.implicitly_wait(time_wait)
+    
+        driver.find_element_by_link_text('Búsqueda avanzada').click()
+    
+    
+        driver.find_element_by_id('selectallBtm').click()
+        driver.find_element_by_id('deleteBtm').click()
+    
+        driver.find_element_by_id('value(input1)').clear()
+        driver.find_element_by_id('value(input1)').send_keys('CU='+str(countries[z])+ ' AND '+ 'PY='+str(year))                    
+        Select(driver.find_element_by_id('value(input2)')).deselect_all()
+        Select(driver.find_element_by_id('value(input2)')).select_by_visible_text('All languages')
+        Select(driver.find_element_by_id('value(input3)')).deselect_all()
+        Select(driver.find_element_by_id('value(input3)')).select_by_visible_text('Article')
+        Select(driver.find_element_by_name('range')).select_by_index(6)
+    
+        Select(driver.find_element_by_name('startYear')).select_by_visible_text(str(year))
+        Select(driver.find_element_by_name('endYear')).select_by_visible_text(str(year))
+    
+    
+        driver.find_element_by_id('settings-arrow').click()
+    
+        driver.find_element_by_id('editionitemBSCI').click()
+        driver.find_element_by_id('editionitemBHCI').click()
+        driver.find_element_by_id('editionitemESCI').click()
+        
+        driver.find_element_by_id('searchButton').click()
+        driver.implicitly_wait(time_wait)
+        
+        driver.find_element_by_id('set_1_div').click()
+        driver.implicitly_wait(time_wait)
+        
+        driver.find_element_by_class_name('summary_CitCount').click()
+        driver.implicitly_wait(time_wait) 
+        
+        driver.find_element_by_class_name('ra-select--text').click()
+        driver.implicitly_wait(time_wait)         
+        
+        driver.find_element_by_id('save_what_all_bottom').click()
+        driver.find_element_by_id('save').click()
+        time.sleep(3)
+        
+        driver.close()
+        
+        os.chdir(directory_files)
+        journals = pd.read_csv('analyze.txt',sep = '\t')
+        journals.columns = ['journal','records','percentage']
+        journals = journals[:-1]
+        
         for j in range(0, len(journals)):
             
             print(journals['journal'][j])
@@ -71,7 +128,7 @@ for z in range(0, len(countries)):
             driver.find_element_by_id('deleteBtm').click()
         
             driver.find_element_by_id('value(input1)').clear()
-            driver.find_element_by_id('value(input1)').send_keys('CU='+str(countries[z])+ ' AND '+ 'PY='+str(year)+' AND '+'SO='+journal)                    
+            driver.find_element_by_id('value(input1)').send_keys('CU='+str(countries[z])+ ' AND '+ 'PY='+str(year)+' AND '+'SO='+'('+journal+')')                    
             Select(driver.find_element_by_id('value(input2)')).deselect_all()
             Select(driver.find_element_by_id('value(input2)')).select_by_visible_text('All languages')
             Select(driver.find_element_by_id('value(input3)')).deselect_all()
@@ -96,7 +153,7 @@ for z in range(0, len(countries)):
             
             if number_paper==0:
                 pass
-                error_journal.append('CU='+str(countries[z])+ ' AND '+ 'PY='+str(year)+' AND '+'SO='+journal)
+                error_journal.append('CU='+str(countries[z])+ ' AND '+ 'PY='+str(year)+' AND '+'SO='+'('+journal+')')
                 driver.close()
             else:           
                 driver.find_element_by_id('set_1_div').click()
@@ -237,4 +294,6 @@ for z in range(0, len(countries)):
                     pass
                     error.append('CU='+str(countries[z])+ ' AND '+ 'PY='+str(year)+' AND '+'SO='+journal+' ;start:'+str(start_number)+' ;end:'+str(end_number))
        
+end = time.time()
+    
           
